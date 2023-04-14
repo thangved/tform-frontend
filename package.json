@@ -1,0 +1,36 @@
+{
+	"name": "tform-frontend",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+		"format": "prettier --write .",
+		"prepare": "husky install",
+		"test": "npm run format && npm run lint"
+	},
+	"dependencies": {
+		"@formkit/auto-animate": "^1.0.0-beta.6",
+		"@mdi/font": "^7.2.96",
+		"@vueup/vue-quill": "^1.1.1",
+		"axios": "^1.3.5",
+		"dayjs": "^1.11.7",
+		"firebase": "^9.19.1",
+		"pinia": "^2.0.28",
+		"vue": "^3.2.45",
+		"vue-router": "^4.1.6",
+		"vuetify": "^3.1.14"
+	},
+	"devDependencies": {
+		"@rushstack/eslint-patch": "^1.1.4",
+		"@vitejs/plugin-vue": "^4.0.0",
+		"@vue/eslint-config-prettier": "^7.0.0",
+		"eslint": "^8.22.0",
+		"eslint-plugin-vue": "^9.3.0",
+		"husky": "^8.0.0",
+		"prettier": "^2.7.1",
+		"vite": "^4.0.0"
+	}
+}
