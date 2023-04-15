@@ -1,12 +1,71 @@
 <template>
 	<div style="height: 100%" class="d-flex flex-column" v-if="formData">
-		<v-app-bar density="compact" elevation="0">
+		<v-app-bar elevation="0">
 			<template v-slot:prepend>
-				<v-btn icon="mdi-chevron-left"></v-btn>
+				<v-btn icon="mdi-chevron-left" @click="$router.back"></v-btn>
 			</template>
 
 			<template v-slot:title>
 				{{ formData.title }}
+			</template>
+
+			<template v-slot:append>
+				<v-dialog max-width="550" origin="overlap">
+					<template v-slot:activator="{ props }">
+						<v-btn
+							v-bind="props"
+							variant="flat"
+							color="blue"
+							class="pl-6 pr-6"
+						>
+							Gửi
+						</v-btn>
+					</template>
+
+					<v-card
+						class="pa-4"
+						elevation="0"
+						border
+						rounded="lg"
+						title="Gửi biểu mẫu"
+					>
+						<v-card-item>
+							<h4>Liên kết</h4>
+							<v-text-field
+								:model-value="shareLink"
+								readonly
+								variant="underlined"
+								color="blue"
+								@focus="(event) => event.target.select()"
+							></v-text-field>
+						</v-card-item>
+
+						<v-card-actions>
+							<v-btn
+								class="pl-4 pr-4"
+								prepend-icon="mdi-open-in-new"
+								@click="openLink"
+								variant="text"
+								color="blue"
+								border=""
+							>
+								Mở liên kết
+							</v-btn>
+
+							<v-spacer></v-spacer>
+
+							<v-btn
+								class="pl-4 pr-4"
+								@click="shareToFb"
+								variant="text"
+								color="blue"
+								border=""
+								icon="mdi-facebook"
+							>
+							</v-btn>
+						</v-card-actions>
+					</v-card>
+				</v-dialog>
 			</template>
 		</v-app-bar>
 		<v-tabs
@@ -28,47 +87,51 @@
 		>
 			<v-container fluid style="max-width: 768px">
 				<v-window v-model="tab">
-					<v-window-item value="1">
+					<v-window-item value="1" v-auto-animate>
 						<div
-							style="position: fixed; right: 0; bottom: 0"
-							class="pa-2"
+							style="
+								position: fixed;
+								right: 0;
+								bottom: 0;
+								z-index: 100;
+							"
+							class="pa-4"
 						>
 							<v-card rounded="pill">
 								<v-card-actions>
 									<v-btn
-										icon="mdi-plus-circle-outline"
-									></v-btn>
-
-									<v-btn icon="mdi-radiobox-marked"></v-btn>
-
-									<v-btn
-										icon="mdi-checkbox-marked-outline"
+										v-for="questionType in questionTypes"
+										:key="questionType.value"
+										:icon="questionType.icon"
+										@click="
+											handleCreateQuestion({
+												type: questionType.value,
+											})
+										"
 									></v-btn>
 								</v-card-actions>
 							</v-card>
 						</div>
 
-						<div ref="parent">
-							<edit-form-details
-								:formData="formData"
-								@update:form="updateForm"
-							></edit-form-details>
+						<edit-form-details
+							:formData="formData"
+							@update:form="updateForm"
+						></edit-form-details>
 
-							<edit-question
-								v-for="question in questions"
-								:key="question._id"
-								:question="question"
-								:formData="formData"
-								@update:question="
-									(payload) =>
-										updateQuestion(question._id, payload)
-								"
-								@delete:question="
-									() => deleteQuestion(question._id)
-								"
-								@copy:question="copyQuestion"
-							></edit-question>
-						</div>
+						<edit-question
+							v-for="question in questions"
+							:key="question._id"
+							:question="question"
+							:formData="formData"
+							@update:question="
+								(payload) =>
+									updateQuestion(question._id, payload)
+							"
+							@delete:question="
+								() => deleteQuestion(question._id)
+							"
+							@copy:question="copyQuestion"
+						></edit-question>
 					</v-window-item>
 
 					<v-window-item value="2">
@@ -153,16 +216,14 @@
 <script>
 import EditFormDetails from "@/components/form/EditFormDetails.vue";
 import EditQuestion from "@/components/form/EditQuestion.vue";
+import questionTypes from "@/mock/question-types";
 import FormService from "@/services/form.service";
 import QuestionService from "@/services/question.service";
-import autoAnimate from "@formkit/auto-animate";
-import { ref } from "vue";
 
 export default {
 	components: { EditFormDetails, EditQuestion },
 	data() {
-		const parent = ref();
-		return { formData: null, questions: [], parent, tab: 1 };
+		return { formData: null, questions: [], tab: 1, questionTypes };
 	},
 	methods: {
 		async fetchFormData() {
@@ -185,9 +246,12 @@ export default {
 			}
 		},
 
-		async handleCreateQuestion() {
+		async handleCreateQuestion(payload) {
 			try {
-				await QuestionService.create({ formId: this.$route.params.id });
+				await QuestionService.create({
+					...payload,
+					formId: this.$route.params.id,
+				});
 			} catch (error) {
 				alert(error);
 			} finally {
@@ -243,11 +307,27 @@ export default {
 				alert(error);
 			}
 		},
+
+		openLink() {
+			open(this.shareLink);
+		},
+
+		shareToFb() {
+			open(
+				`https://www.facebook.com/sharer.php?u=${this.shareLink}`,
+				"share to fb",
+				"width=300,height=300"
+			);
+		},
 	},
 	mounted() {
-		Promise.all([this.fetchFormData(), this.fetchQuestions()]).then(() => {
-			autoAnimate(this.$refs.parent);
-		});
+		this.fetchFormData();
+		this.fetchQuestions();
+	},
+	computed: {
+		shareLink() {
+			return `${location.protocol}//${location.host}/res/${this.formData._id}`;
+		},
 	},
 };
 </script>

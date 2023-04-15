@@ -6,28 +6,29 @@
 			</v-col>
 		</v-row>
 
-		<v-row>
+		<v-row v-auto-animate>
 			<v-col
 				v-for="form in forms"
 				:key="form._id"
 				cols="12"
-				md="3"
-				lg="2"
+				md="4"
+				lg="3"
 			>
-				<router-link :to="`/forms/${form._id}`">
-					<v-card
-						variant="flat"
-						:style="{
-							borderBottom: `10px solid ${form.color}`,
-							background: `${form.color}10`,
-						}"
-						border
-					>
-						<v-card-title class="text-subtitle-1">{{
-							form.title
-						}}</v-card-title>
+				<v-card
+					:title="form.title"
+					variant="flat"
+					:style="{
+						borderBottom: `10px solid ${form.color}`,
+						background: `${form.color}10`,
+					}"
+					border
+				>
+					<router-link :to="`/forms/${form._id}`">
+						<v-card-title class="text-subtitle-1">
+							<div v-html="form.description"></div>
+						</v-card-title>
 
-						<v-card-subtitle class="text-subtitle-2">
+						<v-card-subtitle class="text-subtitle-2 pb-2">
 							Đã cập nhật
 							{{
 								dayjs(form.updatedAt).format(
@@ -35,10 +36,39 @@
 								)
 							}}
 						</v-card-subtitle>
+					</router-link>
 
-						<v-card-actions> </v-card-actions>
-					</v-card>
-				</router-link>
+					<template v-slot:append>
+						<v-menu
+							@click="(event) => event.stopPropagation()"
+							location="bottom center"
+						>
+							<template v-slot:activator="{ props }">
+								<v-btn
+									variant="flat"
+									icon="mdi-dots-vertical"
+									v-bind="props"
+								></v-btn>
+							</template>
+
+							<v-card
+								width="300"
+								rounded="lg"
+								border
+								elevation="1"
+							>
+								<v-list>
+									<v-list-item
+										prepend-icon="mdi-trash-can-outline"
+										@click="deleteForm(form._id)"
+									>
+										Xóa
+									</v-list-item>
+								</v-list>
+							</v-card>
+						</v-menu>
+					</template>
+				</v-card>
 			</v-col>
 		</v-row>
 	</v-container>
@@ -57,9 +87,9 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
 import FormService from "@/services/form.service";
 import useUserStore from "@/stores/user";
+import dayjs from "dayjs";
 
 export default {
 	data() {
@@ -88,6 +118,17 @@ export default {
 			} catch (error) {
 				alert(error);
 			} finally {
+				this.loading = false;
+			}
+		},
+		async deleteForm(id) {
+			this.loading = true;
+			try {
+				await FormService.deleteById(id);
+			} catch (error) {
+				alert(error);
+			} finally {
+				this.getAllForms();
 				this.loading = false;
 			}
 		},

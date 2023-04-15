@@ -1,5 +1,5 @@
 <template>
-	<v-app-bar density="compact" elevation="0" color="blue">
+	<v-app-bar density="compact" elevation="0" border>
 		<template v-slot:prepend>
 			<v-app-bar-nav-icon
 				@click.stop="appStore.toggleDrawer"

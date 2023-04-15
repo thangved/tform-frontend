@@ -25,17 +25,38 @@
 		</v-list>
 
 		<template v-slot:append>
-			<div class="pa-2">
-				<v-btn
-					block
-					prepend-icon="mdi-logout"
-					variant="flat"
-					color="blue"
-					@click="userStore.logout"
-				>
-					Đăng xuất
-				</v-btn>
-			</div>
+			<v-menu location="left">
+				<template v-slot:activator="{ props }">
+					<div class="pa-2">
+						<v-btn
+							block
+							prepend-icon="mdi-logout"
+							variant="flat"
+							color="blue"
+							v-bind="props"
+						>
+							Đăng xuất
+						</v-btn>
+					</div>
+				</template>
+
+				<v-card>
+					<v-list>
+						<v-list-item
+							prepend-icon="mdi-logout"
+							title="Đăng xuất"
+							subtitle="Nhấp ra ngoài để hủy"
+							@click="
+								() => {
+									userStore.logout();
+									$router.push('/login');
+								}
+							"
+						>
+						</v-list-item>
+					</v-list>
+				</v-card>
+			</v-menu>
 		</template>
 	</v-navigation-drawer>
 </template>

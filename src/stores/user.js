@@ -6,7 +6,6 @@ const useUserStore = defineStore("user", {
 	state() {
 		return {
 			_currentUser: null,
-			checked: false,
 		};
 	},
 	getters: {
@@ -15,14 +14,10 @@ const useUserStore = defineStore("user", {
 		},
 	},
 	actions: {
-		auth() {
-			AuthService.auth()
-				.then((res) => {
-					this.$state._currentUser = res;
-				})
-				.finally(() => {
-					this.$state.checked = true;
-				});
+		async auth() {
+			return AuthService.auth().then((res) => {
+				this.$state._currentUser = res;
+			});
 		},
 		logout() {
 			this.$state._currentUser = null;

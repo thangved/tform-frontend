@@ -16,8 +16,9 @@
 						this.editing = true;
 					}
 				"
+				v-auto-animate
 			>
-				<v-col cols="12" md="8">
+				<v-col cols="12" md="8" v-auto-animate>
 					<div v-if="editing">
 						<quill-editor
 							content-type="html"
@@ -45,7 +46,14 @@
 					}}</v-card-subtitle>
 				</v-col>
 
-				<v-col v-if="editing" cols="12" md="4">
+				<v-col
+					v-if="editing"
+					cols="12"
+					md="4"
+					class="d-flex"
+					v-auto-animate
+				>
+					<v-spacer></v-spacer>
 					<v-menu @click="(event) => event.stopPropagation()">
 						<template v-slot:activator="{ props }">
 							<v-btn
@@ -83,7 +91,8 @@
 					</v-menu>
 				</v-col>
 
-				<v-col cols="12" v-if="showOptions">
+				<v-col cols="12" v-if="showOptions" v-auto-animate>
+					<v-divider></v-divider>
 					<v-text-field
 						:variant="editing ? 'underlined' : 'plain'"
 						:color="formData.color"
@@ -112,6 +121,7 @@
 
 						<template v-slot:append v-if="editing">
 							<v-icon
+								class="mt-2"
 								icon="mdi-close"
 								@click="removeOption(index)"
 							></v-icon>
@@ -191,7 +201,8 @@
 					inline
 					inset
 					hide-details
-					v-model="localForm.required"
+					:model-value="localForm.required"
+					@update:model-value="(v) => (localForm.required = v)"
 				></v-switch>
 			</div>
 		</v-card-actions>
@@ -199,26 +210,7 @@
 </template>
 
 <script>
-const questionTypes = [
-	{ value: "text", label: "Văn bản", icon: "mdi-text-short" },
-	{
-		value: "radio",
-		label: "Trắc nghiệm",
-		icon: "mdi-radiobox-marked",
-		optionIcon: "mdi-radiobox-blank",
-	},
-	{
-		value: "checkbox",
-		label: "Hộp kiểm",
-		icon: "mdi-checkbox-outline",
-		optionIcon: "mdi-checkbox-blank-outline",
-	},
-	{
-		value: "select",
-		label: "Menu thả xuống",
-		icon: "mdi-arrow-down-drop-circle-outline",
-	},
-];
+import questionTypes from "@/mock/question-types";
 
 export default {
 	props: ["question", "formData"],

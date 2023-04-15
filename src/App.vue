@@ -8,23 +8,18 @@
 			</v-main>
 		</v-layout>
 	</v-app>
-	<auth-overlay></auth-overlay>
 </template>
 
 <script>
 import AppHeader from "@/components/common/AppHeader.vue";
-import AuthOverlay from "@/components/common/AuthOverlay.vue";
-import useUserStore from "@/stores/user";
 import AppNavigation from "@/components/common/AppNavigation.vue";
+import useUserStore from "@/stores/user";
 
 export default {
-	components: { AuthOverlay, AppHeader, AppNavigation },
+	components: { AppHeader, AppNavigation },
 	data() {
 		const userStore = useUserStore();
 		return { userStore };
-	},
-	mounted() {
-		this.userStore.auth();
 	},
 };
 </script>

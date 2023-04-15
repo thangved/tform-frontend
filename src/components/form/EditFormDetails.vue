@@ -9,7 +9,6 @@
 		:hover="!editing"
 	>
 		<div
-			ref="parent"
 			@click="
 				(event) => {
 					event.stopPropagation();
@@ -17,6 +16,7 @@
 				}
 			"
 			class="pa-4"
+			v-auto-animate
 		>
 			<v-text-field
 				variant="underlined"
@@ -47,16 +47,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import autoAnimate from "@formkit/auto-animate";
-
 export default {
 	props: ["formData"],
 	emits: ["update:form"],
 	data() {
-		const parent = ref();
-
-		return { parent, editing: false, localForm: this.formData };
+		return { editing: false, localForm: this.formData };
 	},
 	methods: {
 		async update() {
@@ -69,7 +64,6 @@ export default {
 		},
 	},
 	mounted() {
-		autoAnimate(this.$refs.parent);
 		window.addEventListener("click", this.update);
 	},
 	unmounted() {

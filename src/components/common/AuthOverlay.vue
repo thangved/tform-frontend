@@ -1,12 +1,14 @@
 <template>
-	<v-dialog max-width="400" persistent :model-value="!currentUser">
-		<v-card elevation="0" :border="true">
+	<v-dialog max-width="400" persistent :model-value="true">
+		<v-card elevation="0" :border="true" rounded="xl">
 			<v-card-title> Đăng nhập </v-card-title>
 			<v-card-subtitle>Vui lòng đăng nhập để tiếp tục</v-card-subtitle>
-			<v-card-text>
+			<v-card-actions>
 				<v-btn
 					block
 					variant="flat"
+					rounded="xl"
+					size="large"
 					border
 					style="text-transform: inherit"
 					@click="handleLogin"
@@ -17,7 +19,7 @@
 					</template>
 					Đăng nhập với tài khoản Google
 				</v-btn>
-			</v-card-text>
+			</v-card-actions>
 		</v-card>
 	</v-dialog>
 </template>
@@ -51,6 +53,7 @@ export default {
 				Token.token = res.token;
 
 				this.userStore.auth();
+				this.$router.push("/");
 			} catch (error) {
 				alert(error);
 			} finally {
