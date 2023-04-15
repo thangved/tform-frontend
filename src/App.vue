@@ -3,7 +3,7 @@
 		<v-layout>
 			<app-header></app-header>
 			<app-navigation></app-navigation>
-			<v-main>
+			<v-main style="height: 100vh; overflow: hidden">
 				<router-view></router-view>
 			</v-main>
 		</v-layout>

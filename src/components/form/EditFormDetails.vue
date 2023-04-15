@@ -24,6 +24,7 @@
 				placeholder="Tiêu đề biểu mẫu"
 				v-if="editing"
 				v-model="localForm.title"
+				autofocus
 			></v-text-field>
 
 			<v-card-title v-else class="text-h5">

@@ -8,6 +8,14 @@ class QuestionService {
 	static getAll(formId) {
 		return client.get("questions", { params: { formId } });
 	}
+
+	static updateById(id, payload) {
+		return client.put(`questions/${id}`, payload);
+	}
+
+	static deleteById(id) {
+		return client.delete(`questions/${id}`);
+	}
 }
 
 export default QuestionService;

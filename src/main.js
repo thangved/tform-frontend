@@ -1,8 +1,7 @@
-import { createPinia } from "pinia";
-import { createApp } from "vue";
 import * as VueQuill from "@vueup/vue-quill";
 import "@vueup/vue-quill/dist/vue-quill.snow.css";
-
+import { createPinia } from "pinia";
+import { createApp } from "vue";
 import App from "./App.vue";
 import "./assets/styles/global.css";
 import vuetify from "./plugins/vuetify";

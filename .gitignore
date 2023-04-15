@@ -27,4 +27,4 @@ coverage
 *.sln
 *.sw?
 
-firebase/config.json
+./src/firebase/config.json

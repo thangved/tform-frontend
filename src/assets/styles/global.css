@@ -2,3 +2,12 @@ a {
 	text-decoration: none;
 	color: inherit;
 }
+
+html {
+	overflow: auto;
+}
+
+ul li,
+ol li {
+	margin-left: 20px;
+}
