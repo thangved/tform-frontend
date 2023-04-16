@@ -17,15 +17,15 @@
 					borderTop: `10px solid ${context.formDetails.color}`,
 				}"
 			>
-				<v-card-title class="text-h5">
+				<v-card-text class="text-h5" style="line-height: 1.2">
 					{{ context.formDetails.title }}
-				</v-card-title>
+				</v-card-text>
 
 				<v-divider></v-divider>
 
-				<v-card-subtitle class="mt-4">
+				<v-card-text class="mt-4">
 					<div v-html="context.formDetails.description"></div>
-				</v-card-subtitle>
+				</v-card-text>
 			</v-card>
 
 			<v-card

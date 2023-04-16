@@ -18,18 +18,18 @@
 			class="pa-4"
 			v-auto-animate
 		>
-			<v-text-field
+			<v-textarea
 				variant="underlined"
 				color="blue"
 				placeholder="Tiêu đề biểu mẫu"
 				v-if="editing"
 				v-model="localForm.title"
 				autofocus
-			></v-text-field>
+			></v-textarea>
 
-			<v-card-title v-else class="text-h5">
+			<v-card-text v-else class="text-h5" style="line-height: 1.2">
 				{{ localForm.title }}
-			</v-card-title>
+			</v-card-text>
 
 			<quill-editor
 				v-if="editing"
@@ -39,9 +39,9 @@
 				content-type="html"
 			></quill-editor>
 
-			<v-card-subtitle v-else>
+			<v-card-text v-else>
 				<div v-html="localForm.description || 'Mô tả biểu mẫu'"></div
-			></v-card-subtitle>
+			></v-card-text>
 		</div>
 	</v-card>
 </template>

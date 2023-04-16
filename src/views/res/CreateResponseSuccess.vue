@@ -14,9 +14,9 @@
 					borderTop: `10px solid ${context.formDetails.color}`,
 				}"
 			>
-				<v-card-title class="text-h5 mt-6 mb-4">
+				<v-card-text class="text-h5" style="line-height: 1.2">
 					{{ context.formDetails.title }}
-				</v-card-title>
+				</v-card-text>
 
 				<v-card-text>
 					Câu trả lời của bạn đã được ghi lại.
