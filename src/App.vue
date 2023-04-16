@@ -1,8 +1,10 @@
 <template>
 	<v-app>
 		<v-layout>
-			<app-header></app-header>
-			<app-navigation></app-navigation>
+			<app-header v-if="!$route.path.startsWith('/res')"></app-header>
+			<app-navigation
+				v-if="!$route.path.startsWith('/res')"
+			></app-navigation>
 			<v-main style="height: 100vh; overflow: hidden">
 				<router-view></router-view>
 			</v-main>

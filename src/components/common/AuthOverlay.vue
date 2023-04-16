@@ -53,7 +53,7 @@ export default {
 				Token.token = res.token;
 
 				this.userStore.auth();
-				this.$router.push("/");
+				this.$router.push(this.$route.query.next || "/");
 			} catch (error) {
 				alert(error);
 			} finally {

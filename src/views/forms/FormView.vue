@@ -73,6 +73,7 @@
 			density="compact"
 			:color="formData?.color || 'blue'"
 			v-model="tab"
+			style="border-bottom: 1px solid #ddd"
 		>
 			<v-tab value="1">Câu hỏi</v-tab>
 			<v-tab value="2">Cài đặt</v-tab>
@@ -83,25 +84,27 @@
 				background: `${formData.color}20`,
 				flex: 1,
 				overflow: 'auto',
+				paddingBottom: '200px',
 			}"
+			ref="parent"
 		>
 			<v-container fluid style="max-width: 768px">
-				<v-window v-model="tab">
-					<v-window-item value="1" v-auto-animate>
-						<div
-							style="
-								position: fixed;
-								right: 0;
-								bottom: 0;
-								z-index: 100;
-							"
-							class="pa-4"
-						>
-							<v-card rounded="pill">
-								<v-card-actions>
+				<div
+					style="position: fixed; right: 0; bottom: 0; z-index: 100"
+					class="pa-4"
+					v-if="tab == 1"
+				>
+					<v-card rounded="pill">
+						<v-card-actions>
+							<v-tooltip
+								v-for="questionType in questionTypes"
+								:key="questionType.value"
+								:text="questionType.label"
+								location="top center"
+							>
+								<template v-slot:activator="{ props }">
 									<v-btn
-										v-for="questionType in questionTypes"
-										:key="questionType.value"
+										v-bind="props"
 										:icon="questionType.icon"
 										@click="
 											handleCreateQuestion({
@@ -109,10 +112,14 @@
 											})
 										"
 									></v-btn>
-								</v-card-actions>
-							</v-card>
-						</div>
+								</template>
+							</v-tooltip>
+						</v-card-actions>
+					</v-card>
+				</div>
 
+				<v-window v-model="tab">
+					<v-window-item value="1" v-auto-animate>
 						<edit-form-details
 							:formData="formData"
 							@update:form="updateForm"
@@ -205,6 +212,13 @@
 							</v-card-text>
 						</v-card>
 					</v-window-item>
+
+					<v-window-item value="3">
+						<response-view
+							:form-data="formData"
+							:questions="questions"
+						></response-view>
+					</v-window-item>
 				</v-window>
 			</v-container>
 		</div>
@@ -219,11 +233,14 @@ import EditQuestion from "@/components/form/EditQuestion.vue";
 import questionTypes from "@/mock/question-types";
 import FormService from "@/services/form.service";
 import QuestionService from "@/services/question.service";
+import { ref } from "vue";
+import ResponseView from "./ResponseView.vue";
 
 export default {
-	components: { EditFormDetails, EditQuestion },
+	components: { EditFormDetails, EditQuestion, ResponseView },
 	data() {
-		return { formData: null, questions: [], tab: 1, questionTypes };
+		const parent = ref();
+		return { formData: null, questions: [], tab: 1, questionTypes, parent };
 	},
 	methods: {
 		async fetchFormData() {
@@ -232,7 +249,7 @@ export default {
 					this.$route.params.id
 				);
 			} catch (error) {
-				alert(error);
+				this.$router.push("/");
 			}
 		},
 
@@ -255,7 +272,8 @@ export default {
 			} catch (error) {
 				alert(error);
 			} finally {
-				this.fetchQuestions();
+				await this.fetchQuestions();
+				this.$refs.parent.scrollTop = this.$refs.parent.scrollHeight;
 			}
 		},
 
@@ -264,6 +282,8 @@ export default {
 				this.questions = await QuestionService.getAll(
 					this.$route.params.id
 				);
+
+				return this.questions;
 			} catch (error) {
 				alert(error);
 			}

@@ -30,6 +30,15 @@ const router = createRouter({
 			name: "create response",
 			component: () => import("@/views/res/CreateResponse.vue"),
 		},
+		{
+			path: "/res/:id/success",
+			name: "create response success",
+			component: () => import("@/views/res/CreateResponseSuccess.vue"),
+		},
+		{
+			path: "/:pathMatch(.*)*",
+			redirect: "/",
+		},
 	],
 });
 
@@ -41,7 +50,8 @@ router.beforeEach(async (to) => {
 
 		if (to.path === "/login") return "/";
 	} catch (error) {
-		if (to.path !== "/login") return "/login";
+		if (to.path !== "/login" && !to.path.startsWith("/res"))
+			return `/login?next=${to.fullPath}`;
 	}
 });
 

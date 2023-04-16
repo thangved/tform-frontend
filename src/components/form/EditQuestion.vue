@@ -54,7 +54,10 @@
 					v-auto-animate
 				>
 					<v-spacer></v-spacer>
-					<v-menu @click="(event) => event.stopPropagation()">
+					<v-menu
+						@click="(event) => event.stopPropagation()"
+						location="center center"
+					>
 						<template v-slot:activator="{ props }">
 							<v-btn
 								:prepend-icon="questionType.icon"
@@ -102,6 +105,8 @@
 						v-model="localForm.options[index]"
 						hide-details
 						:autofocus="editing"
+						:readonly="!editing"
+						@focus="(event) => event.target.select()"
 						@keyup.enter="addOption"
 					>
 						<template
@@ -174,7 +179,7 @@
 
 			<v-btn icon="mdi-content-copy" @click="handleCopy"></v-btn>
 
-			<v-menu pl>
+			<v-menu location="center center">
 				<template v-slot:activator="{ props }">
 					<v-btn icon="mdi-trash-can-outline" v-bind="props"></v-btn>
 				</template>

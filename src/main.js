@@ -4,9 +4,10 @@ import "@vueup/vue-quill/dist/vue-quill.snow.css";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import App from "./App.vue";
+import "./assets/styles/global.css";
+import "./plugins/chart";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
-import "./assets/styles/global.css";
 
 const app = createApp(App);
 

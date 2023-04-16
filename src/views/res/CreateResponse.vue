@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="context"
+		v-if="context && response"
 		:style="{
 			background: `${context.formDetails.color}20`,
 			height: '100%',
@@ -33,7 +33,7 @@
 				variant="flat"
 				class="pa-6 mt-4"
 				rounded="lg"
-				v-for="question in context.questions"
+				v-for="(question, index) in context.questions"
 				:key="question._id"
 			>
 				<v-card-text class="text-subtitle-1 pa-0 mb-4">
@@ -56,6 +56,7 @@
 					:color="context.formDetails.color"
 					density="compact"
 					v-if="question.type === 'text'"
+					v-model="response[index].content"
 				></v-text-field>
 
 				<div v-if="question.type === 'checkbox'">
@@ -67,10 +68,14 @@
 						hide-details
 						:name="question._id"
 						:value="option"
+						v-model="response[index].options"
 					></v-checkbox>
 				</div>
 
-				<v-radio-group v-if="question.type === 'radio'">
+				<v-radio-group
+					v-if="question.type === 'radio'"
+					v-model="response[index].options[0]"
+				>
 					<v-radio
 						v-for="option in question.options"
 						:color="context.formDetails.color"
@@ -84,9 +89,11 @@
 				<v-select
 					v-if="question.type === 'select'"
 					:items="question.options"
-					placeholder="Chọn"
+					placeholder="Chọn..."
 					variant="outlined"
 					density="compact"
+					:color="context.formDetails.color"
+					v-model="response[index].options[0]"
 				></v-select>
 			</v-card>
 
@@ -94,45 +101,62 @@
 				class="mt-4 pl-6 pr-6"
 				variant="flat"
 				:color="context.formDetails.color"
-				>Gửi</v-btn
+				@click="submit"
 			>
-
-			<v-footer class="mt-4 text-center" color="#ffffff00">
-				<div class="text-subtitle-2">
-					<span>
-						Nội dung này không phải do tForms tạo ra hay xác nhận.
-					</span>
-
-					<router-link to="#" style="text-decoration: underline">
-						Báo cáo lạm dụng
-					</router-link>
-					-
-					<router-link to="#" style="text-decoration: underline">
-						Điều khoản sử dụng
-					</router-link>
-					-
-					<router-link to="#" style="text-decoration: underline">
-						Chính sách quyền riêng tư
-					</router-link>
-				</div>
-			</v-footer>
+				Gửi
+			</v-btn>
+			<res-footer></res-footer>
 		</v-container>
 	</div>
 	<v-progress-linear v-else color="primary" indeterminate></v-progress-linear>
 </template>
 <script>
+import ResponseService from "@/services/response-form.service";
 import ResponseForm from "@/services/response-form.service";
+import ResFooter from "@/components/res/ResFooter.vue";
 
 export default {
+	components: { ResFooter },
 	data() {
 		return {
 			context: null,
+			response: null,
 		};
 	},
 	mounted() {
-		ResponseForm.getContext(this.$route.params.id).then((res) => {
-			this.context = res;
-		});
+		ResponseForm.getContext(this.$route.params.id)
+			.then((res) => {
+				this.context = res;
+			})
+			.catch(() => {
+				this.$router.push("/");
+			})
+			.finally(() => {
+				const _response = [];
+				for (const question of this.context.questions) {
+					_response.push({
+						questionId: question._id,
+						content: "",
+						options: [],
+					});
+				}
+				this.response = _response;
+			});
+	},
+	methods: {
+		async submit() {
+			const payload = {
+				formId: this.context.formDetails._id,
+				response: this.response,
+			};
+
+			try {
+				await ResponseService.create(payload);
+				this.$router.push(`${this.$route.path}/success`);
+			} catch (error) {
+				alert(error);
+			}
+		},
 	},
 };
 </script>
