@@ -24,12 +24,17 @@
 					border
 				>
 					<router-link :to="`/forms/${form._id}`">
-						<v-card-title class="text-subtitle-1">
+						<v-card-text class="text-subtitle-1">
 							<div v-html="form.description"></div>
-						</v-card-title>
+						</v-card-text>
 
 						<v-card-subtitle class="text-subtitle-2 pb-2">
-							Đã cập nhật
+							<v-avatar
+								:image="logo"
+								rounded="0"
+								size="small"
+							></v-avatar>
+							Đã mở
 							{{
 								dayjs(form.updatedAt).format(
 									"HH:mm, DD MM, YYYY"
@@ -90,6 +95,7 @@
 import FormService from "@/services/form.service";
 import useUserStore from "@/stores/user";
 import dayjs from "dayjs";
+import logo from "@/assets/images/logo.png";
 
 export default {
 	data() {
@@ -99,6 +105,7 @@ export default {
 			userStore,
 			loading: false,
 			dayjs,
+			logo,
 		};
 	},
 	methods: {
