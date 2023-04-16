@@ -1,5 +1,5 @@
 <template>
-	<v-container>
+	<v-container style="height: 100%; overflow: auto">
 		<v-row>
 			<v-col xs="12">
 				<h2 class="text-subtitle-1">Biểu mẫu gần đây</h2>
