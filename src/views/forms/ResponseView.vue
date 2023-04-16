@@ -172,6 +172,7 @@
 
 <script>
 import ResponseService from "@/services/response-form.service";
+import "@/plugins/chart";
 import { Bar, Pie } from "vue-chartjs";
 
 export default {

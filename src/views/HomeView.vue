@@ -25,7 +25,7 @@
 				>
 					<router-link :to="`/forms/${form._id}`">
 						<v-card-text class="text-subtitle-1">
-							<div v-html="form.description"></div>
+							<div v-html="form.description.slice(0, 400)"></div>
 						</v-card-text>
 
 						<v-card-subtitle class="text-subtitle-2 pb-2">
