@@ -17,7 +17,7 @@
 					<template v-slot:prepend>
 						<img :src="googleIcon" width="25" alt="Google" />
 					</template>
-					Đăng nhập với tài khoản Google
+					Đăng nhập với Google
 				</v-btn>
 			</v-card-actions>
 		</v-card>
