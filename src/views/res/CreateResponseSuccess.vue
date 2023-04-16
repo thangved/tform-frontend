@@ -51,9 +51,19 @@ export default {
 		};
 	},
 	mounted() {
-		ResponseService.getContext(this.$route.params.id).then((res) => {
-			this.context = res;
-		});
+		ResponseService.getContext(this.$route.params.id)
+			.catch((error) => {
+				if (error.status === 401) {
+					return this.$router.push(
+						`/login?next=${this.$route.fullPath}`
+					);
+				}
+
+				this.$router.push("/");
+			})
+			.then((res) => {
+				this.context = res;
+			});
 	},
 };
 </script>

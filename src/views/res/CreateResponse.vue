@@ -28,84 +28,24 @@
 				</v-card-text>
 			</v-card>
 
-			<v-card
-				border
-				variant="flat"
-				class="pa-6 mt-4"
-				rounded="lg"
-				v-for="(question, index) in context.questions"
-				:key="question._id"
-			>
-				<v-card-text class="text-subtitle-1 pa-0 mb-4">
-					<div
-						v-html="question.content"
-						style="display: inline-block"
-					></div>
-
-					<span
-						v-if="question.required"
-						class="ml-2"
-						style="color: red"
-						>*</span
-					>
-				</v-card-text>
-
-				<v-text-field
-					placeholder="Câu trả lời của bạn"
-					variant="underlined"
+			<v-form v-model="form" @submit.prevent="submit" fast-fail>
+				<res-question
+					v-for="(question, index) in context.questions"
+					v-model="response[index]"
+					:question="question"
+					:formDetails="context.formDetails"
+					:key="question._id"
+				></res-question>
+				<v-btn
+					class="mt-4 pl-6 pr-6"
+					variant="flat"
 					:color="context.formDetails.color"
-					density="compact"
-					v-if="question.type === 'text'"
-					v-model="response[index].content"
-				></v-text-field>
-
-				<div v-if="question.type === 'checkbox'">
-					<v-checkbox
-						v-for="option in question.options"
-						:color="context.formDetails.color"
-						:key="option"
-						:label="option"
-						hide-details
-						:name="question._id"
-						:value="option"
-						v-model="response[index].options"
-					></v-checkbox>
-				</div>
-
-				<v-radio-group
-					v-if="question.type === 'radio'"
-					v-model="response[index].options[0]"
+					type="submit"
 				>
-					<v-radio
-						v-for="option in question.options"
-						:color="context.formDetails.color"
-						:key="option"
-						:label="option"
-						hide-details
-						:value="option"
-					></v-radio>
-				</v-radio-group>
-
-				<v-select
-					v-if="question.type === 'select'"
-					:items="question.options"
-					placeholder="Chọn..."
-					variant="outlined"
-					density="compact"
-					:color="context.formDetails.color"
-					v-model="response[index].options[0]"
-				></v-select>
-			</v-card>
-
-			<v-btn
-				class="mt-4 pl-6 pr-6"
-				variant="flat"
-				:color="context.formDetails.color"
-				@click="submit"
-			>
-				Gửi
-			</v-btn>
-			<res-footer></res-footer>
+					Gửi
+				</v-btn>
+				<res-footer></res-footer>
+			</v-form>
 		</v-container>
 	</div>
 	<v-progress-linear v-else color="primary" indeterminate></v-progress-linear>
@@ -114,13 +54,15 @@
 import ResponseService from "@/services/response-form.service";
 import ResponseForm from "@/services/response-form.service";
 import ResFooter from "@/components/res/ResFooter.vue";
+import ResQuestion from "@/components/res/ResQuestion.vue";
 
 export default {
-	components: { ResFooter },
+	components: { ResFooter, ResQuestion },
 	data() {
 		return {
 			context: null,
 			response: null,
+			form: true,
 		};
 	},
 	mounted() {
@@ -128,7 +70,13 @@ export default {
 			.then((res) => {
 				this.context = res;
 			})
-			.catch(() => {
+			.catch((error) => {
+				if (error.status === 401) {
+					return this.$router.push(
+						`/login?next=${this.$route.fullPath}`
+					);
+				}
+
 				this.$router.push("/");
 			})
 			.finally(() => {
@@ -145,6 +93,7 @@ export default {
 	},
 	methods: {
 		async submit() {
+			if (!this.form) return;
 			const payload = {
 				formId: this.context.formDetails._id,
 				response: this.response,
@@ -154,7 +103,7 @@ export default {
 				await ResponseService.create(payload);
 				this.$router.push(`${this.$route.path}/success`);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			}
 		},
 	},

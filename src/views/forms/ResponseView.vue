@@ -23,9 +23,9 @@
 				rounded="pill"
 				:color="formData.color"
 				v-model="responsePos"
+				density="compact"
+				style="flex: 1"
 			></v-pagination>
-
-			<v-spacer> </v-spacer>
 
 			<v-btn
 				icon="mdi-trash-can-outline"
@@ -38,7 +38,7 @@
 		</v-card-actions>
 	</v-card>
 
-	<v-window v-model="tab">
+	<v-window v-model="tab" v-if="responses.length">
 		<v-window-item value="1">
 			<v-card
 				v-for="{ question, responses, chartData } in summary"
@@ -75,6 +75,20 @@
 						v-if="question.type === 'text'"
 					></bar>
 
+					<div v-else-if="question.type === 'file'">
+						<v-btn
+							variant="outlined"
+							v-for="res in responses"
+							:key="res.content"
+							class="mb-2"
+							block
+						>
+							<a :href="res.content" target="_blank">
+								{{ res.content }}
+							</a>
+						</v-btn>
+					</div>
+
 					<v-container v-else style="width: 300px">
 						<pie
 							:data="chartData"
@@ -92,7 +106,7 @@
 			</v-card>
 		</v-window-item>
 
-		<v-window-item v-if="responses.length" value="2">
+		<v-window-item value="2">
 			<v-card
 				class="mt-4 pa-2"
 				:style="{
@@ -132,6 +146,16 @@
 					>
 						{{ content }}
 					</div>
+
+					<a :href="content" target="_blank">
+						<v-btn
+							v-if="question.type === 'file'"
+							variant="outlined"
+							prepend-icon="mdi-file-outline"
+						>
+							Xem tập tin
+						</v-btn>
+					</a>
 
 					<v-select
 						v-if="question.type === 'select'"
@@ -256,7 +280,7 @@ export default {
 			try {
 				await ResponseService.deleteById(id);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				if (this.responsePos === this.responses.length - 1) {
 					this.responsePos--;

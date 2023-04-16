@@ -16,7 +16,10 @@ client.interceptors.response.use(
 		return res.data;
 	},
 	(error) => {
-		throw error.response?.data.message || error.toString();
+		throw {
+			message: error.response?.data.message || error.toString(),
+			status: error.response?.status,
+		};
 	}
 );
 

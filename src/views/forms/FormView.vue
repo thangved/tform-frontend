@@ -175,7 +175,7 @@
 						>
 							<template v-slot:title> Cài đặt </template>
 
-							<v-card-text>
+							<v-card-item>
 								<v-dialog width="300">
 									<template v-slot:activator="{ props }">
 										<v-btn
@@ -209,7 +209,7 @@
 										</v-card-actions>
 									</v-card>
 								</v-dialog>
-							</v-card-text>
+							</v-card-item>
 						</v-card>
 					</v-window-item>
 
@@ -257,7 +257,7 @@ export default {
 			try {
 				await FormService.updateById(this.$route.params.id, payload);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				await this.fetchFormData();
 			}
@@ -270,7 +270,7 @@ export default {
 					formId: this.$route.params.id,
 				});
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				await this.fetchQuestions();
 				this.$refs.parent.scrollTop = this.$refs.parent.scrollHeight;
@@ -285,7 +285,7 @@ export default {
 
 				return this.questions;
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			}
 		},
 
@@ -293,7 +293,7 @@ export default {
 			try {
 				await QuestionService.updateById(id, payload);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				this.fetchQuestions();
 			}
@@ -303,7 +303,7 @@ export default {
 			try {
 				await QuestionService.deleteById(id);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				this.fetchQuestions();
 			}
@@ -313,7 +313,7 @@ export default {
 			try {
 				await QuestionService.create(payload);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				this.fetchQuestions();
 			}
@@ -324,7 +324,7 @@ export default {
 				await FormService.deleteById(this.$route.params.id);
 				this.$router.push("/");
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			}
 		},
 

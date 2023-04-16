@@ -1,6 +1,6 @@
 <template>
 	<v-card
-		class="mt-6"
+		class="mt-4"
 		rounded="lg"
 		:border="!editing"
 		:style="{
@@ -108,6 +108,7 @@
 						:readonly="!editing"
 						@focus="(event) => event.target.select()"
 						@keyup.enter="addOption"
+						class="ml-2 mr-2"
 					>
 						<template
 							v-if="questionType.value === 'select'"
@@ -142,6 +143,7 @@
 						@click="addOption"
 						style="width: 200px"
 						readonly
+						class="ml-2 mr-2"
 					>
 						<template
 							v-if="questionType.value === 'select'"
@@ -160,6 +162,35 @@
 							</span>
 						</template>
 					</v-text-field>
+				</v-col>
+
+				<v-col cols="12" v-if="localForm.type === 'file' && editing">
+					<v-switch
+						hide-details
+						label="Chỉ cho phép loại file cụ thể"
+						:color="formData.color"
+						inset
+						class="ml-2"
+						v-model="localForm.onlyAccept"
+					></v-switch>
+
+					<v-row v-if="localForm.onlyAccept" class="mt-2">
+						<v-col
+							v-for="accept in fileAccepts"
+							:key="accept.value"
+							cols="6"
+							class="pb-0 pt-0"
+						>
+							<v-checkbox
+								hide-details
+								:label="accept.name"
+								:value="accept.value"
+								:color="formData.color"
+								v-model="localForm.accepts"
+								density="compact"
+							></v-checkbox>
+						</v-col>
+					</v-row>
 				</v-col>
 			</v-row>
 		</v-card-text>
@@ -216,6 +247,7 @@
 
 <script>
 import questionTypes from "@/mock/question-types";
+import fileAccepts from "@/mock/file-accepts";
 
 export default {
 	props: ["question", "formData"],
@@ -225,6 +257,7 @@ export default {
 			questionTypes,
 			editing: false,
 			deleted: false,
+			fileAccepts,
 		};
 	},
 	emits: ["update:question", "delete:question", "copy:question"],

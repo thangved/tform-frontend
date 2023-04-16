@@ -1,6 +1,6 @@
 <template>
 	<v-dialog max-width="400" persistent :model-value="true">
-		<v-card elevation="0" :border="true" rounded="xl">
+		<v-card elevation="0" :border="true" rounded="xl" class="pa-4">
 			<v-card-title> Đăng nhập </v-card-title>
 			<v-card-subtitle>Vui lòng đăng nhập để tiếp tục</v-card-subtitle>
 			<v-card-actions>
@@ -55,7 +55,7 @@ export default {
 				this.userStore.auth();
 				this.$router.push(this.$route.query.next || "/");
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				this.loading = false;
 			}

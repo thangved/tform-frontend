@@ -25,7 +25,7 @@
 				>
 					<router-link :to="`/forms/${form._id}`">
 						<v-card-text class="text-subtitle-1">
-							<div v-html="form.description.slice(0, 400)"></div>
+							<div v-html="form.description?.slice(0, 400)"></div>
 						</v-card-text>
 
 						<v-card-subtitle class="text-subtitle-2 pb-2">
@@ -123,7 +123,7 @@ export default {
 
 				this.$router.push(`/forms/${res._id}`);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				this.loading = false;
 			}
@@ -133,7 +133,7 @@ export default {
 			try {
 				await FormService.deleteById(id);
 			} catch (error) {
-				alert(error);
+				alert(error.message);
 			} finally {
 				this.getAllForms();
 				this.loading = false;

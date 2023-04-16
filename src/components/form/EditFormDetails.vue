@@ -25,6 +25,8 @@
 				v-if="editing"
 				v-model="localForm.title"
 				autofocus
+				rows="2"
+				no-resize
 			></v-textarea>
 
 			<v-card-text v-else class="text-h5" style="line-height: 1.2">
@@ -42,6 +44,20 @@
 			<v-card-text v-else>
 				<div v-html="localForm.description || 'Mô tả biểu mẫu'"></div
 			></v-card-text>
+
+			<v-card-actions v-if="editing">
+				<v-spacer> </v-spacer>
+
+				<div>
+					<v-switch
+						hide-details
+						label="Yêu cầu đăng nhập"
+						inset
+						:color="formData.color"
+						v-model="localForm.requiredLogin"
+					></v-switch>
+				</div>
+			</v-card-actions>
 		</div>
 	</v-card>
 </template>

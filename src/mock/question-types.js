@@ -17,6 +17,11 @@ const questionTypes = [
 		label: "Menu thả xuống",
 		icon: "mdi-arrow-down-drop-circle-outline",
 	},
+	{
+		value: "file",
+		label: "Tải tệp lên",
+		icon: "mdi-cloud-upload-outline",
+	},
 ];
 
 export default questionTypes;
