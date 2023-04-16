@@ -28,7 +28,12 @@
 				</v-card-text>
 			</v-card>
 
-			<v-form v-model="form" @submit.prevent="submit" fast-fail>
+			<v-form
+				v-model="form"
+				validateOn="blur"
+				@submit.prevent="submit"
+				fast-fail
+			>
 				<res-question
 					v-for="(question, index) in context.questions"
 					v-model="response[index]"

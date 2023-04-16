@@ -5,9 +5,13 @@ import * as directives from "vuetify/directives";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import "vuetify/styles";
 import { vi } from "vuetify/locale";
+import { VDataTable } from "vuetify/labs/VDataTable";
 
 const vuetify = createVuetify({
-	components,
+	components: {
+		...components,
+		VDataTable,
+	},
 	directives,
 	icons: {
 		defaultSet: "mdi",
@@ -19,6 +23,11 @@ const vuetify = createVuetify({
 	locale: {
 		locale: "vi",
 		messages: { vi },
+	},
+	defaults: {
+		VDataTable: {
+			fixedHeader: true,
+		},
 	},
 });
 

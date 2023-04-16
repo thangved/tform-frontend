@@ -10,8 +10,9 @@
 			align-tabs="center"
 			v-model="tab"
 		>
-			<v-tab value="1">Bản tóm tắt</v-tab>
+			<v-tab value="1">Bảng tóm tắt</v-tab>
 			<v-tab value="2">Cá nhân</v-tab>
+			<v-tab value="3">Bảng</v-tab>
 		</v-tabs>
 
 		<v-card-actions
@@ -191,12 +192,24 @@
 				</v-card-item>
 			</v-card>
 		</v-window-item>
+
+		<v-window-item value="3">
+			<v-card class="mt-4" rounded="lg">
+				<v-card-item>
+					<v-data-table
+						:headers="tableHead"
+						:items="tableItems"
+					></v-data-table>
+				</v-card-item>
+			</v-card>
+		</v-window-item>
 	</v-window>
 </template>
 
 <script>
-import ResponseService from "@/services/response-form.service";
 import "@/plugins/chart";
+import ResponseService from "@/services/response-form.service";
+import extractContent from "@/utils/extractContent";
 import { Bar, Pie } from "vue-chartjs";
 
 export default {
@@ -265,6 +278,34 @@ export default {
 				this.questions.find((e) => e._id === this.questionId) ||
 				this.questions[0]
 			);
+		},
+		tableHead() {
+			return this.summary.map((e) => ({
+				title: extractContent(e.question.content),
+				key: e.question._id,
+			}));
+		},
+		tableItems() {
+			const result = [];
+
+			for (const resp of this.responses) {
+				const obj = {};
+
+				for (const res of resp.responses) {
+					if (
+						res.question.type === "text" ||
+						res.question.type === "file"
+					) {
+						obj[res.question._id] = res.content;
+					} else {
+						obj[res.question._id] = res.options.join(", ");
+					}
+				}
+
+				result.push(obj);
+			}
+
+			return result;
 		},
 	},
 	mounted() {
