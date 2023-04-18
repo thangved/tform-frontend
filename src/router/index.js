@@ -36,6 +36,11 @@ const router = createRouter({
 			component: () => import("@/views/res/CreateResponseSuccess.vue"),
 		},
 		{
+			path: "/account",
+			name: "account",
+			component: () => import("@/views/account/AccountView.vue"),
+		},
+		{
 			path: "/:pathMatch(.*)*",
 			redirect: "/",
 		},

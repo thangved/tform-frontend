@@ -235,6 +235,7 @@ import FormService from "@/services/form.service";
 import QuestionService from "@/services/question.service";
 import { ref } from "vue";
 import ResponseView from "./ResponseView.vue";
+import toast from "@/utils/toast";
 
 export default {
 	components: { EditFormDetails, EditQuestion, ResponseView },
@@ -257,7 +258,7 @@ export default {
 			try {
 				await FormService.updateById(this.$route.params.id, payload);
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				await this.fetchFormData();
 			}
@@ -270,7 +271,7 @@ export default {
 					formId: this.$route.params.id,
 				});
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				await this.fetchQuestions();
 				this.$refs.parent.scrollTop = this.$refs.parent.scrollHeight;
@@ -285,7 +286,7 @@ export default {
 
 				return this.questions;
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			}
 		},
 
@@ -293,7 +294,7 @@ export default {
 			try {
 				await QuestionService.updateById(id, payload);
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				this.fetchQuestions();
 			}
@@ -303,7 +304,7 @@ export default {
 			try {
 				await QuestionService.deleteById(id);
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				this.fetchQuestions();
 			}
@@ -313,7 +314,7 @@ export default {
 			try {
 				await QuestionService.create(payload);
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				this.fetchQuestions();
 			}
@@ -324,7 +325,7 @@ export default {
 				await FormService.deleteById(this.$route.params.id);
 				this.$router.push("/");
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			}
 		},
 

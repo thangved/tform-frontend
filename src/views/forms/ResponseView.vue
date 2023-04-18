@@ -1,6 +1,18 @@
 <template>
 	<v-card border variant="flat" rounded="lg">
 		<template v-slot:append>
+			<v-tooltip text="Tải lại">
+				<template v-slot:activator="{ props }">
+					<v-btn
+						v-bind="props"
+						icon="mdi-reload"
+						variant="flat"
+						@click="fetchResponses"
+						:loading="loading"
+					></v-btn>
+				</template>
+			</v-tooltip>
+
 			<v-tooltip text="Xem bảng dữ liệu">
 				<template v-slot:activator="{ props }">
 					<v-btn
@@ -164,17 +176,18 @@
 						v-if="question.type === 'text'"
 					></bar>
 
-					<div v-else-if="question.type === 'file'">
+					<div
+						v-else-if="question.type === 'file'"
+						class="mr-n1 ml-n1"
+					>
 						<v-btn
 							variant="outlined"
 							v-for="res in responses"
 							:key="res.content"
-							class="mb-2"
-							block
+							class="ma-1"
+							prepend-icon="mdi-file-outline"
 						>
-							<a :href="res.content" target="_blank">
-								{{ res.content }}
-							</a>
+							<a :href="res.content" target="_blank"> Tập tin </a>
 						</v-btn>
 					</div>
 
@@ -195,13 +208,44 @@
 			</v-card>
 		</v-window-item>
 
-		<v-window-item value="2" id="_print_page">
+		<div id="_print_page" hidden>
+			<div style="padding: 10px">
+				<h1>{{ formData.title }}</h1>
+				<div v-html="formData.description"></div>
+			</div>
+
+			<div
+				v-for="{ question, content, options } in responses[
+					responsePos - 1
+				].responses"
+				:key="question._id"
+				style="border-top: 1px solid #ddd; padding: 10px"
+			>
+				<h4 v-html="question.content"></h4>
+
+				<p v-if="question.type === 'text'">{{ content }}</p>
+
+				<a
+					:href="content"
+					target="_blank"
+					v-else-if="question.type === 'file'"
+					>{{ content }}</a
+				>
+
+				<p v-else>
+					{{ options.join(", ") }}
+				</p>
+			</div>
+		</div>
+
+		<v-window-item value="2">
 			<v-card
 				class="mt-4 pa-2"
 				:style="{
 					borderTop: `10px solid ${formData.color}`,
 				}"
 				rounded="lg"
+				v-auto-animate
 			>
 				<v-card-subtitle>
 					Bạn không thể chỉnh sửa câu trả lời
@@ -214,6 +258,31 @@
 				<v-card-text class="text-subtitle-1">
 					<div v-html="formData.description"></div>
 				</v-card-text>
+
+				<v-card-actions
+					v-if="responses[responsePos - 1].responseDetails.user"
+				>
+					<v-list-item class="w-100">
+						<template v-slot:prepend>
+							<v-avatar
+								:image="
+									responses[responsePos - 1].responseDetails
+										.user.avatar
+								"
+							></v-avatar>
+						</template>
+
+						<v-list-item-title>{{
+							responses[responsePos - 1].responseDetails.user
+								.fullName
+						}}</v-list-item-title>
+
+						<v-list-item-subtitle>{{
+							responses[responsePos - 1].responseDetails.user
+								.email
+						}}</v-list-item-subtitle>
+					</v-list-item>
+				</v-card-actions>
 			</v-card>
 
 			<v-card
@@ -307,6 +376,8 @@ import ResponseService from "@/services/response-form.service";
 import extractContent from "@/utils/extractContent";
 import csvDownload from "json-to-csv-export";
 import { Bar, Pie } from "vue-chartjs";
+import toast from "@/utils/toast";
+import dayjs from "dayjs";
 
 export default {
 	components: { Bar, Pie },
@@ -316,6 +387,7 @@ export default {
 			tab: 1,
 			responsePos: 1,
 			modal: false,
+			loading: false,
 		};
 	},
 	props: ["formData", "questions"],
@@ -377,16 +449,23 @@ export default {
 			);
 		},
 		tableHead() {
-			return this.summary.map((e) => ({
-				title: extractContent(e.question.content),
-				key: e.question._id,
-			}));
+			return [
+				{ title: "Thời gian", key: "time" },
+				...this.summary.map((e) => ({
+					title: extractContent(e.question.content),
+					key: e.question._id,
+				})),
+			];
 		},
 		tableItems() {
 			const result = [];
 
 			for (const resp of this.responses) {
-				const obj = {};
+				const obj = {
+					time: dayjs(resp.responseDetails.createdAt).format(
+						"DD/MM/YYYY HH:mm:ss"
+					),
+				};
 
 				for (const res of resp.responses) {
 					if (
@@ -410,19 +489,30 @@ export default {
 	},
 	methods: {
 		async fetchResponses() {
-			this.responses = await ResponseService.getAll(
-				this.$route.params.id
-			);
+			try {
+				this.loading = true;
+				const res = await ResponseService.getAll(this.$route.params.id);
+
+				if (
+					res.length === this.responsePos - 1 &&
+					this.responsePos !== 1
+				) {
+					this.responsePos--;
+				}
+
+				this.responses = res;
+			} catch (error) {
+				toast.error(error.message);
+			} finally {
+				this.loading = false;
+			}
 		},
 		async deleteResponseById(id) {
 			try {
 				await ResponseService.deleteById(id);
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
-				if (this.responsePos === this.responses.length - 1) {
-					this.responsePos--;
-				}
 				this.fetchResponses();
 			}
 		},
@@ -430,7 +520,7 @@ export default {
 			try {
 				await ResponseService.deleteAll(this.formData._id);
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				this.fetchResponses();
 			}

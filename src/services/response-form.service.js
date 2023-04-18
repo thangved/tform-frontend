@@ -18,7 +18,7 @@ class ResponseService {
 	}
 
 	static deleteAll(formId) {
-		return client.delete("forms", {
+		return client.delete("res", {
 			params: { formId },
 		});
 	}

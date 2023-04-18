@@ -14,12 +14,25 @@
 
 		<v-divider></v-divider>
 
-		<v-list :selected="[$route.path]" density="compact" nav>
+		<v-list
+			:selected="[$route.fullPath]"
+			active-color="blue"
+			density="compact"
+			nav
+		>
 			<router-link to="/forms">
 				<v-list-item
 					prepend-icon="mdi-list-box-outline"
 					title="Biểu mẫu của tôi"
 					value="/forms"
+				></v-list-item>
+			</router-link>
+
+			<router-link to="/account">
+				<v-list-item
+					prepend-icon="mdi-account-circle-outline"
+					title="Thông tin tài khoản"
+					value="/account"
 				></v-list-item>
 			</router-link>
 		</v-list>

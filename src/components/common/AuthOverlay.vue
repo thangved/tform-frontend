@@ -32,6 +32,7 @@ import useUserStore from "@/stores/user";
 import Token from "@/utils/token";
 import { signInWithPopup } from "@firebase/auth";
 import { GoogleAuthProvider } from "firebase/auth";
+import toast from "@/utils/toast";
 
 export default {
 	data() {
@@ -55,7 +56,7 @@ export default {
 				this.userStore.auth();
 				this.$router.push(this.$route.query.next || "/");
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				this.loading = false;
 			}

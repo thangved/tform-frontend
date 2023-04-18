@@ -169,6 +169,7 @@
 <script>
 import { ref } from "vue";
 import upload from "@/utils/upload";
+import toast from "@/utils/toast";
 
 export default {
 	props: ["modelValue", "question", "formDetails"],
@@ -201,7 +202,7 @@ export default {
 
 				this.localModelValue.content = fileUrl;
 			} catch (error) {
-				alert(error.message);
+				toast.error(error.message);
 			} finally {
 				this.loading = false;
 			}

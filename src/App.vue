@@ -1,7 +1,9 @@
 <template>
 	<v-app>
 		<v-layout>
-			<app-header v-if="$route.path === '/forms'"></app-header>
+			<app-header
+				v-if="$route.path === '/forms' || $route.path === '/account'"
+			></app-header>
 
 			<app-navigation
 				v-if="!$route.path.startsWith('/res')"

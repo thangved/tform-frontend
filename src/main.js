@@ -7,6 +7,8 @@ import "./assets/styles/global.css";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
 import VueHtmlToPaper from "./plugins/VueHtmlToPaper";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 
 const app = createApp(App);
 
@@ -21,5 +23,9 @@ app.component(
 );
 app.use(autoAnimatePlugin);
 app.use(VueHtmlToPaper);
+app.use(Toast, {
+	position: "top-center",
+	closeOnClick: true,
+});
 
 app.mount("#app");
