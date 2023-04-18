@@ -6,6 +6,7 @@ import App from "./App.vue";
 import "./assets/styles/global.css";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
+import VueHtmlToPaper from "./plugins/VueHtmlToPaper";
 
 const app = createApp(App);
 
@@ -19,5 +20,6 @@ app.component(
 	)
 );
 app.use(autoAnimatePlugin);
+app.use(VueHtmlToPaper);
 
 app.mount("#app");

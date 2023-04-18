@@ -29,7 +29,6 @@
 					return true;
 				},
 			]"
-			autofocus
 		></v-text-field>
 
 		<div v-if="question.type === 'checkbox'">

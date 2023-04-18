@@ -1,8 +1,71 @@
 <template>
 	<v-card border variant="flat" rounded="lg">
-		<v-card-title class="text-h5 pa-4"
-			>{{ responses.length }} câu trả lời</v-card-title
-		>
+		<template v-slot:append>
+			<v-tooltip text="Xem bảng dữ liệu">
+				<template v-slot:activator="{ props }">
+					<v-btn
+						v-bind="props"
+						icon="mdi-table"
+						variant="flat"
+						@click="modal = true"
+					></v-btn>
+				</template>
+			</v-tooltip>
+
+			<v-menu width="300">
+				<template v-slot:activator="{ props }">
+					<v-btn
+						variant="flat"
+						icon="mdi-dots-vertical"
+						v-bind="props"
+					></v-btn>
+				</template>
+
+				<v-card elevation="1">
+					<v-list density="compact">
+						<v-list-item
+							prepend-icon="mdi-tray-arrow-down"
+							@click="exportCsvFile"
+						>
+							Tải câu trả lời xuống (.csv)
+						</v-list-item>
+
+						<v-divider></v-divider>
+
+						<v-dialog max-width="300">
+							<template v-slot:activator="{ props }">
+								<v-list-item
+									prepend-icon="mdi-trash-can-outline"
+									v-bind="props"
+								>
+									Xóa tất cả câu trả lời
+								</v-list-item>
+							</template>
+
+							<v-card>
+								<v-card-item> Xóa câu trả lời </v-card-item>
+
+								<v-card-text>
+									Bạn có chắc chắn muốn xóa tất cả câu trả lời
+									trong biểu mẫu không? Không thể hoàn tác tác
+									vụ này.
+								</v-card-text>
+
+								<v-card-actions>
+									<v-spacer></v-spacer>
+									<v-btn
+										color="blue"
+										@click="deleteAllResponse"
+										>Xóa</v-btn
+									>
+								</v-card-actions>
+							</v-card>
+						</v-dialog>
+					</v-list>
+				</v-card>
+			</v-menu>
+		</template>
+		<template v-slot:title>{{ responses.length }} câu trả lời</template>
 
 		<v-tabs
 			density="compact"
@@ -12,7 +75,6 @@
 		>
 			<v-tab value="1">Bảng tóm tắt</v-tab>
 			<v-tab value="2">Cá nhân</v-tab>
-			<v-tab value="3">Bảng</v-tab>
 		</v-tabs>
 
 		<v-card-actions
@@ -29,13 +91,39 @@
 			></v-pagination>
 
 			<v-btn
-				icon="mdi-trash-can-outline"
-				@click="
-					deleteResponseById(
-						responses[responsePos - 1].responseDetails._id
-					)
-				"
+				icon="mdi-printer-outline"
+				@click="$htmlToPaper('_print_page')"
 			></v-btn>
+
+			<v-dialog width="300">
+				<template v-slot:activator="{ props }">
+					<v-btn icon="mdi-trash-can-outline" v-bind="props"></v-btn
+				></template>
+
+				<v-card>
+					<v-card-title> Xóa phản hồi </v-card-title>
+
+					<v-card-text>
+						Bạn có chắc chắn muốn xóa câu trả lời này không? Không
+						thể hoàn tác tác vụ này.
+					</v-card-text>
+
+					<v-card-actions>
+						<v-spacer> </v-spacer>
+
+						<v-btn
+							@click="
+								deleteResponseById(
+									responses[responsePos - 1].responseDetails
+										._id
+								)
+							"
+							color="blue"
+							>Xóa</v-btn
+						>
+					</v-card-actions>
+				</v-card>
+			</v-dialog>
 		</v-card-actions>
 	</v-card>
 
@@ -107,7 +195,7 @@
 			</v-card>
 		</v-window-item>
 
-		<v-window-item value="2">
+		<v-window-item value="2" id="_print_page">
 			<v-card
 				class="mt-4 pa-2"
 				:style="{
@@ -193,8 +281,15 @@
 			</v-card>
 		</v-window-item>
 
-		<v-window-item value="3">
-			<v-card class="mt-4" rounded="lg">
+		<v-dialog :model-value="modal" fullscreen>
+			<v-card>
+				<template v-slot:append>
+					<v-btn
+						icon="mdi-close"
+						variant="flat"
+						@click="modal = false"
+					></v-btn>
+				</template>
 				<v-card-item>
 					<v-data-table
 						:headers="tableHead"
@@ -202,7 +297,7 @@
 					></v-data-table>
 				</v-card-item>
 			</v-card>
-		</v-window-item>
+		</v-dialog>
 	</v-window>
 </template>
 
@@ -210,6 +305,7 @@
 import "@/plugins/chart";
 import ResponseService from "@/services/response-form.service";
 import extractContent from "@/utils/extractContent";
+import csvDownload from "json-to-csv-export";
 import { Bar, Pie } from "vue-chartjs";
 
 export default {
@@ -219,6 +315,7 @@ export default {
 			responses: [],
 			tab: 1,
 			responsePos: 1,
+			modal: false,
 		};
 	},
 	props: ["formData", "questions"],
@@ -328,6 +425,21 @@ export default {
 				}
 				this.fetchResponses();
 			}
+		},
+		async deleteAllResponse() {
+			try {
+				await ResponseService.deleteAll(this.formData._id);
+			} catch (error) {
+				alert(error.message);
+			} finally {
+				this.fetchResponses();
+			}
+		},
+		exportCsvFile() {
+			csvDownload({
+				data: this.tableItems,
+				headers: this.tableHead.map((e) => e.title),
+			});
 		},
 	},
 };

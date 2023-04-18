@@ -28,6 +28,10 @@ const vuetify = createVuetify({
 		VDataTable: {
 			fixedHeader: true,
 		},
+		VCard: {
+			variant: "flat",
+			rounded: "lg",
+		},
 	},
 });
 

@@ -28,12 +28,7 @@
 				</v-card-text>
 			</v-card>
 
-			<v-form
-				v-model="form"
-				validateOn="blur"
-				@submit.prevent="submit"
-				fast-fail
-			>
+			<v-form v-model="valid" @submit.prevent="submit">
 				<res-question
 					v-for="(question, index) in context.questions"
 					v-model="response[index]"
@@ -67,7 +62,7 @@ export default {
 		return {
 			context: null,
 			response: null,
-			form: true,
+			valid: true,
 		};
 	},
 	mounted() {
@@ -98,7 +93,7 @@ export default {
 	},
 	methods: {
 		async submit() {
-			if (!this.form) return;
+			if (!this.valid) return;
 			const payload = {
 				formId: this.context.formDetails._id,
 				response: this.response,
