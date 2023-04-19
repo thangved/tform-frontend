@@ -125,20 +125,33 @@
 							@update:form="updateForm"
 						></edit-form-details>
 
-						<edit-question
-							v-for="question in questions"
-							:key="question._id"
-							:question="question"
-							:formData="formData"
-							@update:question="
-								(payload) =>
-									updateQuestion(question._id, payload)
-							"
-							@delete:question="
-								() => deleteQuestion(question._id)
-							"
-							@copy:question="copyQuestion"
-						></edit-question>
+						<draggable
+							v-model="questions"
+							@change="handleDragDrop"
+							item-key="_id"
+							:component-data="{
+								type: 'transition-group',
+							}"
+						>
+							<template #item="{ element: question }">
+								<edit-question
+									:question="question"
+									:formData="formData"
+									:key="question._id"
+									@update:question="
+										(payload) =>
+											updateQuestion(
+												question._id,
+												payload
+											)
+									"
+									@delete:question="
+										() => deleteQuestion(question._id)
+									"
+									@copy:question="copyQuestion"
+								></edit-question>
+							</template>
+						</draggable>
 					</v-window-item>
 
 					<v-window-item value="2">
@@ -236,9 +249,10 @@ import QuestionService from "@/services/question.service";
 import { ref } from "vue";
 import ResponseView from "./ResponseView.vue";
 import toast from "@/utils/toast";
+import draggable from "vuedraggable";
 
 export default {
-	components: { EditFormDetails, EditQuestion, ResponseView },
+	components: { EditFormDetails, EditQuestion, ResponseView, draggable },
 	data() {
 		const parent = ref();
 		return { formData: null, questions: [], tab: 1, questionTypes, parent };
@@ -339,6 +353,20 @@ export default {
 				"share to fb",
 				"width=300,height=300"
 			);
+		},
+
+		async handleDragDrop() {
+			try {
+				for (let i = 0; i < this.questions.length; i++) {
+					await QuestionService.updateById(this.questions[i]._id, {
+						order: i,
+					});
+				}
+
+				await this.fetchQuestions();
+			} catch (error) {
+				toast.error(error.message);
+			}
 		},
 	},
 	mounted() {

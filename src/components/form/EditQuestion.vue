@@ -1,6 +1,6 @@
 <template>
 	<v-card
-		class="mt-4"
+		class="mt-4 wrapper"
 		rounded="lg"
 		:border="!editing"
 		:style="{
@@ -8,6 +8,10 @@
 		}"
 		:hover="!editing"
 	>
+		<div class="text-center mt-n1 dragger">
+			<v-icon icon="mdi-drag-horizontal"></v-icon>
+		</div>
+
 		<v-card-text>
 			<v-row
 				@click="
@@ -307,3 +311,13 @@ export default {
 	},
 };
 </script>
+
+<style>
+.wrapper:hover .dragger {
+	visibility: visible;
+}
+
+.dragger {
+	visibility: hidden;
+}
+</style>

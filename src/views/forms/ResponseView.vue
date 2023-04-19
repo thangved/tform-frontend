@@ -208,37 +208,36 @@
 			</v-card>
 		</v-window-item>
 
-		<div id="_print_page" hidden>
-			<div style="padding: 10px">
-				<h1>{{ formData.title }}</h1>
-				<div v-html="formData.description"></div>
-			</div>
-
-			<div
-				v-for="{ question, content, options } in responses[
-					responsePos - 1
-				].responses"
-				:key="question._id"
-				style="border-top: 1px solid #ddd; padding: 10px"
-			>
-				<h4 v-html="question.content"></h4>
-
-				<p v-if="question.type === 'text'">{{ content }}</p>
-
-				<a
-					:href="content"
-					target="_blank"
-					v-else-if="question.type === 'file'"
-					>{{ content }}</a
-				>
-
-				<p v-else>
-					{{ options.join(", ") }}
-				</p>
-			</div>
-		</div>
-
 		<v-window-item value="2">
+			<div id="_print_page" hidden>
+				<div style="padding: 10px">
+					<h1>{{ formData.title }}</h1>
+					<div v-html="formData.description"></div>
+				</div>
+
+				<div
+					v-for="{ question, content, options } in responses[
+						responsePos - 1
+					].responses"
+					:key="question._id"
+					style="border-top: 1px solid #ddd; padding: 10px"
+				>
+					<h4 v-html="question.content"></h4>
+
+					<p v-if="question.type === 'text'">{{ content }}</p>
+
+					<a
+						:href="content"
+						target="_blank"
+						v-else-if="question.type === 'file'"
+						>{{ content }}</a
+					>
+
+					<p v-else>
+						{{ options.join(", ") }}
+					</p>
+				</div>
+			</div>
 			<v-card
 				class="mt-4 pa-2"
 				:style="{
@@ -400,9 +399,9 @@ export default {
 
 				for (const response of this.responses) {
 					for (const responseQuestion of response.responses) {
-						if (responseQuestion.question._id === question._id) {
+						if (responseQuestion.question?._id === question?._id) {
 							responses.push(responseQuestion);
-							continue;
+							break;
 						}
 					}
 				}
