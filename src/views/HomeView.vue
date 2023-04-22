@@ -80,60 +80,58 @@
 					</router-link>
 
 					<v-card-actions>
-						<v-list-item>
-							<template v-slot:prepend>
-								<v-avatar
-									:image="logo"
-									rounded="0"
-									size="small"
-								></v-avatar>
+						<v-spacer>
+							<v-list-item class="flex-1">
+								<template v-slot:prepend>
+									<v-avatar
+										:image="logo"
+										rounded="0"
+										size="small"
+									></v-avatar>
+								</template>
+								<router-link :to="`/forms/${form._id}`">
+									<v-list-item-title>
+										{{ extractContent(form.title) }}
+									</v-list-item-title>
+									<v-list-item-subtitle>
+										Đã mở
+										{{
+											dayjs(form.updatedAt).format(
+												"HH:mm, DD MM, YYYY"
+											)
+										}}
+									</v-list-item-subtitle>
+								</router-link>
+							</v-list-item>
+						</v-spacer>
+						<v-menu
+							@click="(event) => event.stopPropagation()"
+							location="bottom center"
+						>
+							<template v-slot:activator="{ props }">
+								<v-btn
+									variant="flat"
+									icon="mdi-dots-vertical"
+									v-bind="props"
+								></v-btn>
 							</template>
 
-							<router-link :to="`/forms/${form._id}`">
-								<v-list-item-title>
-									{{ extractContent(form.title) }}
-								</v-list-item-title>
-								<v-list-item-subtitle>
-									Đã mở
-									{{
-										dayjs(form.updatedAt).format(
-											"HH:mm, DD MM, YYYY"
-										)
-									}}
-								</v-list-item-subtitle>
-							</router-link>
-
-							<template v-slot:append>
-								<v-menu
-									@click="(event) => event.stopPropagation()"
-									location="bottom center"
-								>
-									<template v-slot:activator="{ props }">
-										<v-btn
-											variant="flat"
-											icon="mdi-dots-vertical"
-											v-bind="props"
-										></v-btn>
-									</template>
-
-									<v-card
-										width="300"
-										rounded="lg"
-										border
-										elevation="1"
+							<v-card
+								width="300"
+								rounded="lg"
+								border
+								elevation="1"
+							>
+								<v-list>
+									<v-list-item
+										prepend-icon="mdi-trash-can-outline"
+										@click="deleteForm(form._id)"
 									>
-										<v-list>
-											<v-list-item
-												prepend-icon="mdi-trash-can-outline"
-												@click="deleteForm(form._id)"
-											>
-												Xóa
-											</v-list-item>
-										</v-list>
-									</v-card>
-								</v-menu>
-							</template>
-						</v-list-item>
+										Xóa
+									</v-list-item>
+								</v-list>
+							</v-card>
+						</v-menu>
 					</v-card-actions>
 				</v-card>
 			</v-col>
