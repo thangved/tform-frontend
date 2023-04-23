@@ -11,3 +11,7 @@ ul li,
 ol li {
 	margin-left: 20px;
 }
+
+.sortable-ghost  {
+	opacity: 0;
+}

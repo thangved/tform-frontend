@@ -132,12 +132,17 @@
 							:component-data="{
 								type: 'transition-group',
 							}"
+							animation="200"
+							drag-class="moving"
+							@start="drag = true"
+							@end="drag = false"
 						>
 							<template #item="{ element: question }">
 								<edit-question
 									:question="question"
 									:formData="formData"
 									:key="question._id"
+									:drag="drag"
 									@update:question="
 										(payload) =>
 											updateQuestion(
@@ -246,16 +251,23 @@ import EditQuestion from "@/components/form/EditQuestion.vue";
 import questionTypes from "@/mock/question-types";
 import FormService from "@/services/form.service";
 import QuestionService from "@/services/question.service";
-import { ref } from "vue";
-import ResponseView from "./ResponseView.vue";
 import toast from "@/utils/toast";
+import { ref } from "vue";
 import draggable from "vuedraggable";
+import ResponseView from "./ResponseView.vue";
 
 export default {
 	components: { EditFormDetails, EditQuestion, ResponseView, draggable },
 	data() {
 		const parent = ref();
-		return { formData: null, questions: [], tab: 1, questionTypes, parent };
+		return {
+			formData: null,
+			questions: [],
+			tab: 1,
+			questionTypes,
+			parent,
+			drag: false,
+		};
 	},
 	methods: {
 		async fetchFormData() {
