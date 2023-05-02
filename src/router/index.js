@@ -51,7 +51,9 @@ router.beforeEach(async (to) => {
 	try {
 		const userStore = useUserStore();
 
-		await userStore.auth();
+		if (!userStore.currentUser) {
+			await userStore.auth();
+		}
 
 		if (to.path === "/login") return "/";
 	} catch (error) {
