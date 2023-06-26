@@ -16,7 +16,7 @@
 		"@mdi/font": "^7.2.96",
 		"@vueup/vue-quill": "^1.2.0",
 		"axios": "^1.4.0",
-		"chart.js": "^4.2.1",
+		"chart.js": "^4.3.0",
 		"dayjs": "^1.11.8",
 		"firebase": "^9.22.2",
 		"json-to-csv-export": "^2.1.1",
