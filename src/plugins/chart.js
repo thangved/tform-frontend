@@ -18,5 +18,5 @@ ChartJS.register(
 	LinearScale,
 	ArcElement,
 	Colors,
-	Legend
+	Legend,
 );

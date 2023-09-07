@@ -127,7 +127,7 @@
 							@click="
 								deleteResponseById(
 									responses[responsePos - 1].responseDetails
-										._id
+										._id,
 								)
 							"
 							color="blue"
@@ -430,7 +430,7 @@ export default {
 					datasets: [
 						{
 							data: Object.keys(hashedValues).map(
-								(e) => hashedValues[e]
+								(e) => hashedValues[e],
 							),
 						},
 					],
@@ -462,7 +462,7 @@ export default {
 			for (const resp of this.responses) {
 				const obj = {
 					time: dayjs(resp.responseDetails.createdAt).format(
-						"DD/MM/YYYY HH:mm:ss"
+						"DD/MM/YYYY HH:mm:ss",
 					),
 				};
 

@@ -20,7 +20,7 @@ client.interceptors.response.use(
 			message: error.response?.data.message || error.toString(),
 			status: error.response?.status,
 		};
-	}
+	},
 );
 
 export default client;

@@ -291,12 +291,12 @@ export default {
 		},
 		addOption() {
 			this.localForm.options.push(
-				`Tùy chọn ${this.localForm.options.length + 1}`
+				`Tùy chọn ${this.localForm.options.length + 1}`,
 			);
 		},
 		removeOption(index) {
 			this.localForm.options = this.localForm.options.filter(
-				(e, i) => index !== i
+				(e, i) => index !== i,
 			);
 		},
 		handleDelete() {
@@ -317,12 +317,12 @@ export default {
 	computed: {
 		questionType() {
 			return questionTypes.find(
-				(e) => e.value === (this.localForm.type || "text")
+				(e) => e.value === (this.localForm.type || "text"),
 			);
 		},
 		showOptions() {
 			return ["radio", "checkbox", "select"].includes(
-				this.questionType.value
+				this.questionType.value,
 			);
 		},
 	},

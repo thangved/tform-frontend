@@ -21,10 +21,10 @@ import useUserStore from "@/stores/user";
 import { defineAsyncComponent } from "vue";
 
 const AppHeader = defineAsyncComponent(() =>
-	import("@/components/common/AppHeader.vue")
+	import("@/components/common/AppHeader.vue"),
 );
 const AppNavigation = defineAsyncComponent(() =>
-	import("@/components/common/AppNavigation.vue")
+	import("@/components/common/AppNavigation.vue"),
 );
 
 export default {

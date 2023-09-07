@@ -55,7 +55,7 @@ export default {
 			.catch((error) => {
 				if (error.status === 401) {
 					return this.$router.push(
-						`/login?next=${this.$route.fullPath}`
+						`/login?next=${this.$route.fullPath}`,
 					);
 				}
 
