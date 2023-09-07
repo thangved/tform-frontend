@@ -45,7 +45,7 @@ export default {
 				this.loading = true;
 				const firebaseRes = await signInWithPopup(
 					auth,
-					new GoogleAuthProvider()
+					new GoogleAuthProvider(),
 				);
 
 				const token = firebaseRes.user.accessToken;

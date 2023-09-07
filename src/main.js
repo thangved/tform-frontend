@@ -18,8 +18,8 @@ app.use(vuetify);
 app.component(
 	"QuillEditor",
 	defineAsyncComponent(() =>
-		import("@vueup/vue-quill").then((res) => res.QuillEditor)
-	)
+		import("@vueup/vue-quill").then((res) => res.QuillEditor),
+	),
 );
 app.use(autoAnimatePlugin);
 app.use(VueHtmlToPaper);

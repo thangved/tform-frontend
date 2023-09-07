@@ -13,7 +13,7 @@ const VueHtmlToPaper = {
 		app.config.globalProperties.$htmlToPaper = (
 			el,
 			localOptions,
-			cb = () => true
+			cb = () => true,
 		) => {
 			let defaultName = "_blank",
 				defaultSpecs = [

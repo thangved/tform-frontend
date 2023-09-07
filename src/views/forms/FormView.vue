@@ -147,7 +147,7 @@
 										(payload) =>
 											updateQuestion(
 												question._id,
-												payload
+												payload,
 											)
 									"
 									@delete:question="
@@ -273,7 +273,7 @@ export default {
 		async fetchFormData() {
 			try {
 				this.formData = await FormService.getById(
-					this.$route.params.id
+					this.$route.params.id,
 				);
 			} catch (error) {
 				this.$router.push("/");
@@ -307,7 +307,7 @@ export default {
 		async fetchQuestions() {
 			try {
 				this.questions = await QuestionService.getAll(
-					this.$route.params.id
+					this.$route.params.id,
 				);
 
 				return this.questions;
@@ -363,7 +363,7 @@ export default {
 			open(
 				`https://www.facebook.com/sharer.php?u=${this.shareLink}`,
 				"share to fb",
-				"width=300,height=300"
+				"width=300,height=300",
 			);
 		},
 

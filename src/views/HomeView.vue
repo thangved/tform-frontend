@@ -97,7 +97,7 @@
 										Đã mở
 										{{
 											dayjs(form.updatedAt).format(
-												"HH:mm, DD MM, YYYY"
+												"HH:mm, DD MM, YYYY",
 											)
 										}}
 									</v-list-item-subtitle>
