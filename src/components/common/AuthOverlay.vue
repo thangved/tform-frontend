@@ -30,8 +30,7 @@ import { auth } from "@/firebase";
 import AuthService from "@/services/auth.service";
 import useUserStore from "@/stores/user";
 import Token from "@/utils/token";
-import { signInWithPopup } from "@firebase/auth";
-import { GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import toast from "@/utils/toast";
 
 export default {
